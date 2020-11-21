@@ -1,11 +1,13 @@
 from django import forms
 
 
-class LoginForm(form.Form):
+class LoginForm(forms.Form):
     """ User authorization form """
     """ Форма авторизации пользователя """
 
-    username = forms.CharField(verbose_name='Имя пользователя', max_length=30)
-    password = forms.CharField(verbose_name='Пароль',
+    # Имя пользователя
+    username = forms.CharField(label='Имя пользователя', max_length=30)
+    # Пароль
+    password = forms.CharField(label='Пароль',
                                min_length=8,
                                widget=forms.PasswordInput)

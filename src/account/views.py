@@ -24,20 +24,21 @@ def user_authorization(request):
 
     """
     if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            cd = form.cleaned_data
+        login_form = LoginForm(request.POST)
+        if login_form.is_valid():
+            cd = login_form.cleaned_data
             user = authenticate(request,
                                 username=cd['username'],
                                 password=cd['password'])
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                return HttpResponse('Аутентификация успешно пройдена')
+            print(user)
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    return HttpResponse('Аутентификация успешно пройдена')
+                else:
+                    return HttpResponse('Учетная запись отключена')
             else:
-                return HttpResponse('Учетная запись отключена')
-        else:
-            return HttpResponse('Неверный логин и"\"или пароль')
+                return HttpResponse('Неверный логин и\\или пароль')
     else:
-        form = LoginForm()
-    return render(request, 'account/login.html', {'form': form})
+        login_form = LoginForm()
+    return render(request, 'account/login.html', {'login_form': login_form})
