@@ -10,22 +10,13 @@
         <span class="logo"> Сайт </span>
         {% if request.user.is_authenticated %}
             <ul class="menu">
-                <li>
-                    {% if section == "dashboard" %} 
-                        class="selected"
-                    {% endif %}
+                <li {% if section == "dashboard" %} class="selected" {% endif %}>
                     <a href="{% url "dashboard" %}">Мой рабочий стол</a>
                 </li>
-                <li>
-                    {% if section == "images" %}
-                        class="selected"
-                    {% endif %}
+                <li {% if section == "images" %} class="selected" {% endif %}>
                     <a href="#">Картинки</a>
                 </li>
-                <li>
-                    {% if section == "people" %}
-                        class="selected"
-                    {% endif %}
+                <li {% if section == "people" %} class="selected" {% endif %}>
                     <a href="#">Люди</a>
                 </li>
             </ul>
@@ -35,13 +26,13 @@
                 Добро пожаловать {{ request.user.first_name }},
                 <a href="{% url "logout" %}">Выход</a>
             {% else %}
-                <a href="{% url "login" %}">Выход</a>
+                <a href="{% url "login" %}">Вход</a>
             {% endif %}
         </span>
     </div>
     <div id="content">
         {% block content %}
-        {% endblock %}
+        {% endblock content %}
     </div>
 </body>
 </html>
