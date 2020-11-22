@@ -143,3 +143,9 @@ LOGIN_URL = 'login'
 # The address by clicking on which the user will log out of his account
 # Адрес, перейдя по которому, пользователь выйдет из своего аккаунта
 LOGOUT_URL = 'logout'
+
+"""
+Configuring messages to be sent to the console instead of using an SMTP server
+Настройка отправки сообщений в консоль вместо использования SMTP-сервера
+"""
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
