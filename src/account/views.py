@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 
 from .forms import LoginForm
 
@@ -13,16 +14,13 @@ def user_authorization(request):
         - verification of data with those contained in the database;
         - user authorization and session creation.
 
-    """
-
-    """
     Веб-сервис авторизации пользователя.
     Действия:
         - получение логина и пароля пользователя из формы;
         - сверка данных с теми, что содержаться в базе данных;
         - авторизация пользователя и создания сессии.
-
     """
+
     if request.method == 'POST':
         login_form = LoginForm(request.POST)
         if login_form.is_valid():
@@ -30,7 +28,6 @@ def user_authorization(request):
             user = authenticate(request,
                                 username=cd['username'],
                                 password=cd['password'])
-            print(user)
             if user is not None:
                 if user.is_active:
                     login(request, user)
@@ -42,3 +39,21 @@ def user_authorization(request):
     else:
         login_form = LoginForm()
     return render(request, 'account/login.html', {'login_form': login_form})
+
+
+@login_required
+def dashboard(request):
+    """
+    Decorator for checking if the user is authorized.
+    A handler for displaying the desktop, which the user will see
+    when they log into their account.
+    'section' is a context variable, with the help of it we find out which
+    section of the site
+
+    Декоратор для проверки авторизован ли пользователь.
+    Обработчик для отображения рабочего стола, который пользователь увидит при
+    входе в свой аккаунт.
+    'section ' - переменная контекста, с помощью ее узнаем какой раздел сайта
+    просматривает пользователь.
+    """
+    return render(request, 'account/dashboard.html', {'section': 'dashboard'})

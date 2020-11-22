@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'account.apps.AccountConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.postgres',
 
-    'account.apps.AccountConfig',
 ]
 
 MIDDLEWARE = [
@@ -125,3 +125,21 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+"""
+Application settings
+Настройки приложения
+"""
+# Specifies the address where Django will redirect user on successful
+# authorization, if GET parameter 'next' is not specified
+# Указывает адрес, куда Django будет перенаправлять пользователя при успешной
+# авторизации, если не указан GET-параметр ' next'
+LOGIN_REDIRECT_URL = 'dashboard'
+# The address where you want to redirect the user to login to the system,
+# for example from handlers with the 'login_required' decorator
+# Адрес, куда нужно перенаправлять пользователя для входа в систему, например
+# из обработчиков с декоратором 'login_required'
+LOGIN_URL = 'login'
+# The address by clicking on which the user will log out of his account
+# Адрес, перейдя по которому, пользователь выйдет из своего аккаунта
+LOGOUT_URL = 'logout'
