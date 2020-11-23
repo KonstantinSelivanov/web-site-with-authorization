@@ -1,9 +1,12 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 
 from .forms import LoginForm, UserRegistrationForm
+from .forms import UserEditForm, ProfileUserEditForm
+from .models import ProfileUser
 
 
 def user_authorization(request):
@@ -72,6 +75,9 @@ def user_registration(request):
             # Задача пользователю зашифрованного пароля
             new_user.set_password(
                 user_registration_form.cleaned_data['password'])
+            # Create user profile
+            # Создание профиля пользователя
+            ProfileUser.objects.create(user=new_user)
             # Saving a user in the database
             # Сохранение пользователя в базе данных
             new_user.save()
@@ -81,3 +87,35 @@ def user_registration(request):
         user_registration_form = UserRegistrationForm()
     return render(request, 'account/register.html',
                            {'user_registration_form': user_registration_form})
+
+
+# Decorator for views that checks that the user is logged in, redirect to
+# the log-in page if necessary.
+# Декоратор для представлений, который проверяет, что пользователь вошел
+# в систему, при необходимости перенаправляет на страницу входа.
+@login_required
+def edit_user_profile(request):
+    """ Saving changes to the user profile """
+    """ Сохранение изменений в профиле пользователя """
+
+    if request.method == 'POST':
+        user_edit_form = UserEditForm(instance=request.user,
+                                      data=request.POST)
+        profile_user_edit_form = ProfileUserEditForm(
+            instance=request.user.profile,
+            data=request.POST,
+            files=request.FILES)
+        if user_edit_form.is_valid() and profile_user_edit_form.is_valid():
+            user_edit_form.save()
+            profile_user_edit_form.save()
+            messages.success(request, 'Профиль успешно обновлен')
+        else:
+            messages.error(request, 'Ошибка обновления вашего профиля')
+    else:
+        user_edit_form = UserEditForm(instance=request.user)
+        profile_user_edit_form = ProfileUserEditForm(
+            instance=request.user.profile)
+
+    return render(request, 'account/edit_user_profile.html',
+                           {'user_edit_form': user_edit_form,
+                            'profile_user_edit_form': profile_user_edit_form})

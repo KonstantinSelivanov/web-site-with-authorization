@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
 
+from .models import ProfileUser
+
 
 class LoginForm(forms.Form):
     """ User authorization form """
@@ -31,3 +33,21 @@ class UserRegistrationForm(forms.ModelForm):
         if cd['password'] != cd['password_confirmation']:
             raise forms.ValidationError('Пароли не совпадают.')
         return cd['password_confirmation']
+
+
+class UserEditForm(forms.ModelForm):
+    """ Form editing basic user profile information """
+    """ Форма редактирования базовых данных профиля пользователя """
+
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'email')
+
+
+class ProfileUserEditForm(forms.ModelForm):
+    """ Form for editing additional user profile data """
+    """ Форма редактирования дополнительных данных профиля пользователя """
+
+    class Meta:
+        model = ProfileUser
+        fields = ('date_of_birth', 'photo')

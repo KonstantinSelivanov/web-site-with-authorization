@@ -42,4 +42,7 @@ urlpatterns = [
     # Template user registration
     # Шаблон регистрации пользователя
     path('register/', views.user_registration, name='user_registration'),
+    # Template editing user profile
+    # Шаблон редактирования профиля пользователя
+    path('edit/', views.edit_user_profile, name='edit_user_profile'),
 ]
