@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 
-from .forms import LoginForm
+from .forms import LoginForm, UserRegistrationForm
 
 
 def user_authorization(request):
@@ -57,3 +57,27 @@ def dashboard(request):
     просматривает пользователь.
     """
     return render(request, 'account/dashboard.html', {'section': 'dashboard'})
+
+
+def user_registration(request):
+    """ User registration """
+    """ Регистрация нового пользователя """
+    if request.method == 'POST':
+        user_registration_form = UserRegistrationForm(request.POST)
+        if user_registration_form.is_valid():
+            # Create a new user for now without saving to the database
+            # Создание нового пользователя пока без сохранения в базе данных
+            new_user = user_registration_form.save(commit=False)
+            # Setting the user an encrypted password
+            # Задача пользователю зашифрованного пароля
+            new_user.set_password(
+                user_registration_form.cleaned_data['password'])
+            # Saving a user in the database
+            # Сохранение пользователя в базе данных
+            new_user.save()
+            return render(request, 'account/register_done.html',
+                                   {'new_user': new_user})
+    else:
+        user_registration_form = UserRegistrationForm()
+    return render(request, 'account/register.html',
+                           {'user_registration_form': user_registration_form})

@@ -39,4 +39,7 @@ urlpatterns = [
     path('reset/done/',
          auth_views.PasswordResetCompleteView.as_view(),
          name='password_reset_complete'),
+    # Template user registration
+    # Шаблон регистрации пользователя
+    path('register/', views.user_registration, name='user_registration'),
 ]
