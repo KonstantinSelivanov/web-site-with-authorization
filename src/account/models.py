@@ -22,9 +22,9 @@ class ProfileUser(models.Model):
                               blank=True)
 
 
-    class Meta:
-        verbose_name = 'Профиль пользователя'
-        verbose_name_plural = 'Профили пользователей'
+    # class Meta:
+    #     verbose_name = 'Профиль пользователя'
+    #     verbose_name_plural = 'Профили пользователей'
 
     def __str__(self):
         return 'Профиль пользователя {}'.format(self.user.username)
