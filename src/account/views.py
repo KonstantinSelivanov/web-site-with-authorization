@@ -97,9 +97,7 @@ def user_registration(request):
 def edit_user_profile(request):
     """ Saving changes to the user profile """
     """ Сохранение изменений в профиле пользователя """
-    print('1')
     if request.method == 'POST':
-        print('2')
         user_edit_form = UserEditForm(instance=request.user,
                                       data=request.POST)
         profile_user_edit_form = ProfileUserEditForm(
@@ -110,14 +108,13 @@ def edit_user_profile(request):
             user_edit_form.save()
             profile_user_edit_form.save()
             messages.success(request, 'Профиль успешно обновлен')
+            return render(request, 'account/dashboard.html')
         else:
             messages.error(request, 'Ошибка обновления вашего профиля')
     else:
-        print('3')
         user_edit_form = UserEditForm(instance=request.user)
         profile_user_edit_form = ProfileUserEditForm(
             instance=request.user.profileuser)
-    print('4')
     return render(request, 'account/edit_user_profile.html',
                            {'user_edit_form': user_edit_form,
                             'profile_user_edit_form': profile_user_edit_form})
