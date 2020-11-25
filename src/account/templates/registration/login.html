@@ -20,5 +20,21 @@
         </form>
         <p><a href="{% url "password_reset" %}">Забыли свой пароль?</a></p>
     </div>
+    <div class="social">
+        <ul>
+            <li class="vkontakte"><a href="{% url "social:begin" "vk-oauth2" %}">
+                Войти через VK</a>
+            </li>
+            <li class="facebook"><a href="{% url "social:begin" "facebook" %}">
+                Войти через Facebook</a>
+            </li>
+            <li class="google"><a href="{% url "social:begin" "google-oauth2" %}">
+                Войти через Google</a>
+            </li>
+            <li class="instagram"><a href="{% url "social:begin" "instagram" %}">
+                Войти через Instagram</a>
+            </li>
+        </ul>
+    </div>
 
 {% endblock content %}

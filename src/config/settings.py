@@ -25,12 +25,13 @@ SECRET_KEY = '#o#c^@+k&e#=&yuozd=c#pfqe$bexy%0&8w!gpcs28z(qv78e#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['freephotostock.pro', 'localhost', '127.0.0.1']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    # App account
     'account.apps.AccountConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -39,13 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.postgres',
+    # App social auth
+    'social_django',
 
 ]
 
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'account.authentication.EmailAuthBackend',
-]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -70,6 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
             ],
         },
     },
@@ -155,3 +155,33 @@ LOGOUT_URL = 'logout'
 # an SMTP server
 # Настройка отправки сообщений в консоль вместо использования SMTP-сервера
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+AUTHENTICATION_BACKENDS = [
+    # Authentication through email
+    'django.contrib.auth.backends.ModelBackend',
+    'account.authentication.EmailAuthBackend',
+    # Authentication through VK
+    'social_core.backends.vk.VKOAuth2',
+    # Authentication through Facebook
+    'social_core.backends.facebook.FacebookOAuth2',
+    # Authentication through Google
+    'social_core.backends.google.GoogleOAuth2',
+    # Authentication through Instagram
+    'social_core.backends.instagram.InstagramOAuth2',
+
+]
+
+# Social auth settings
+
+SOCIAL_AUTH_VK_OAUTH2_KEY = ''  # VK Consumer Key
+SOCIAL_AUTH_VK_OAUTH2_SECRET = ''  # VK Consumer Secret
+SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email']
+SOCIAL_AUTH_FACEBOOK_KEY = ''  # Facebook App ID
+SOCIAL_AUTH_FACEBOOK_SECRET = ''  # Facebook App Secret
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = ''  # Google Consumer Key
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = ''  # Google Consumer Secret
+SOCIAL_AUTH_INSTAGRAM_OAUTH2_KEY = ''  # Instagram Consumer Key
+SOCIAL_AUTH_INSTAGRAM_OAUTH2_SECRET = ''  # Instagram Consumer Secret
+SOCIAL_AUTH_INSTAGRAM_OAUTH2_SCOPE = ['email']
