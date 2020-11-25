@@ -33,6 +33,8 @@ ALLOWED_HOSTS = ['freephotostock.pro', 'localhost', '127.0.0.1']
 INSTALLED_APPS = [
     # App account
     'account.apps.AccountConfig',
+    'images.apps.ImagesConfig',
+    # App django
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
