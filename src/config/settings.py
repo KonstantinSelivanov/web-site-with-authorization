@@ -33,7 +33,6 @@ ALLOWED_HOSTS = ['freephotostock.pro', 'localhost', '127.0.0.1']
 INSTALLED_APPS = [
     # App account
     'account.apps.AccountConfig',
-    'images.apps.ImagesConfig',
     # App django
     'django.contrib.admin',
     'django.contrib.auth',
@@ -44,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.postgres',
     # App social auth
     'social_django',
+    'images.apps.ImagesConfig',
 
 ]
 
@@ -100,16 +100,20 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': 'django.contrib.auth.password_validation \
+            .UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': 'django.contrib.auth.password_validation \
+            .MinimumLengthValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation \
+            .CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation \
+            .NumericPasswordValidator',
     },
 ]
 

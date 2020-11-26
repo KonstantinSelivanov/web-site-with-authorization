@@ -1,4 +1,8 @@
 from django import forms
+from django.core.files.base import ContentFile
+from django.utils.text import slugify
+
+from urllib import request
 
 from .models import Image
 
@@ -9,8 +13,8 @@ class ImageCreateForm(forms.ModelForm):
     The user will need to provide the URL of the image, its title,
     and an optional description. Our application will download
     the image and create an Image object in the database.
-    Форма для сохранения объекта картинки находящейся на другом сайте.
-    Пользователю нужно будет указать URL картинки, ее заголовок и
+    Форма для сохранения объекта изображения находящегося на другом сайте.
+    Пользователю нужно будет указать URL изображения, ее заголовок и
     необязательное описание. Наше приложение скачает изображение и создаст
     объект Image в базе данных.
     """
@@ -18,7 +22,6 @@ class ImageCreateForm(forms.ModelForm):
         model = Image
         fields = ('title', 'url', 'description')
         widgets = {'url': forms.HiddenInput, }
-
 
     def clean_url(self):
         """
@@ -34,3 +37,23 @@ class ImageCreateForm(forms.ModelForm):
             raise forms.ValidationError('Указанный URL не содержит файлов'
                                         'с расширением .jpg и .jpeg')
         return url
+
+    def save(self, force_insert=False, force_update=False, commit=True):
+        """
+        The overridden standard save () function of the ModelForm class
+        to save a model object to the database.
+        Переопределенная стандартная функция save() класса ModelForm
+        для сохранения объекта модели в базу данных.
+        """
+        image = super(ImageCreateForm, self).save(commit=False)
+        image_url = self.cleaned_data['url']
+        image_name = '{}.{}'.format(
+            slugify(image.title), image_url.rsplit('.', 1)[1].lower())
+        # Download the image to the given URL
+        # Скачиваем картинку по указанному адресу
+        response = request.urlopen(image_url)
+        image.image.save(image_name, ContentFile(response.read()), save=False)
+
+        if commit:
+            image.save()
+        return image
