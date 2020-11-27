@@ -23,12 +23,10 @@ def image_create(request):
     сохраняется в БД. Для каждой картики формируется URL.
     """
     if request.method == 'POST':
-        print('1')
-        form = ImageCreateForm(data=request.POST)
-        print('11111')
-        if form.is_valid():
-            cd = form.cleaned_data
-            new_item = form.save(commit=False)
+        image_form = ImageCreateForm(data=request.POST)
+        if image_form.is_valid():
+            cd = image_form.cleaned_data
+            new_item = image_form.save(commit=False)
             # Adding a user to the created object
             # Добавление пользователя к созданному объекту
             new_item.user = request.user
@@ -36,16 +34,14 @@ def image_create(request):
             messages.success(request, 'Изображение успешно добавлено')
             # Redirect the user to the saved image page
             # Перенаправление пользователя на страницу сохраненного изображения
-            print('2')
             return redirect(new_item.get_absolute_url())
         else:
-            print('Ошибка')
+            print('Ошибка, форма не валидна')
     else:
         # Filling out a form from a GET request
         # Заполнение формы из GET-запроса
-        print('3')
-        form = ImageCreateForm(data=request.GET)
+        image_form = ImageCreateForm(data=request.GET)
 
     return render(request,
                   'images/image/create.html',
-                  {'section': 'images', 'form': form})
+                  {'section': 'images', 'image_form': image_form})
