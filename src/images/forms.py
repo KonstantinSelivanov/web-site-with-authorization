@@ -21,7 +21,8 @@ class ImageCreateForm(forms.ModelForm):
     class Meta:
         model = Image
         fields = ('title', 'url', 'description')
-        widgets = {'url': forms.HiddenInput, }
+        widgets = {'url': forms.URLInput, }
+
 
     def clean_url(self):
         """

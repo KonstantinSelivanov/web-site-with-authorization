@@ -5,10 +5,23 @@
 {% block content %}
 
     <h1>Добавить изображение в сток изображений</h1>
-    <img src="{{ request.GET.url }}" class="image-preview">
-    <form action="." method="POST">
+    
+    <img id="uploadPreview" src="{{ request.GET.url }}" class="image-preview">
+    <form action="." method="POST" >
         {{ image_form.as_p }}
         {% csrf_token %}
+        <!-- <img id="uploadPreview" style="width: 100px; height: 100px;" /> -->
+        <!-- <input id="uploadImage" type="text" name="myPhoto" onchange="PreviewImage();" /> -->
+        <script>
+        // function PreviewImage() {
+            var oFReader = new FileReader();
+            oFReader.readAsDataURL(document.getElementById("{{ request.GET.url }}").files[0]);
+            oFReader.onload = function (oFREvent) {
+            document.getElementById("uploadPreview").src = oFREvent.target.result;
+            };
+        // };
+        </script>
+
         <input type="submit" value="Добавить">
     </form>
 
