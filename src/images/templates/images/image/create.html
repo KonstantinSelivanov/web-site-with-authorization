@@ -9,8 +9,7 @@
     <form action="." method="POST">
         {{ image_form.as_p }}
         {% csrf_token %}
-        {% comment %} <input type="submit" value="Добавить"> {% endcomment %}
-        <input type="submit" value="Bookmark it!">
+        <input type="submit" value="Добавить">
     </form>
 
 {% endblock content %}

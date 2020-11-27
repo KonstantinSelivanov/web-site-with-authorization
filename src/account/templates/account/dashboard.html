@@ -5,10 +5,22 @@
 {% block content %}
 
     <h1>Рабочий стол</h1>
+
+    {% with total_images_created=request.user.images_created.count %}
+        <p> Добро пожаловать в рабочий стол.
+        Вы поделились {{ total_image_created }} новым изображением
+        {{ total_images_created|pluralize }}. </p>
+    {% endwith %}
+
+    <p> Перетащите следующую кнопку на рабочий стол, чтобы добавить в закладки 
+    изображения с других веб-сайтов 
+    <a href="javascript:{% include "photostock_launcher.js" %}" class="button">Добавить</a>
+    <p>
+
     <p>
         Добро пожаловать в Ваш рабочий стол.
         Вы можете <a href="{% url "edit_user_profile" %}"> изменить свой профиль</a> 
         или <a href="{% url "password_change" %}">изменить свой пароль.</a>
-    </p>
+    <p>
 
 {% endblock content %}
