@@ -39,12 +39,12 @@ class Image(models.Model):
                                    blank=True)
     created = models.DateTimeField(verbose_name='Дата и время создания',
                                    db_index=True, default=timezone.now)
-    user_like = models.ManyToManyField(settings.AUTH_USER_MODEL,
-                                       related_name='images_liked',
-                                       blank=True)
-    user_dislike = models.ManyToManyField(settings.AUTH_USER_MODEL,
-                                          related_name='images_disliked',
-                                          blank=True)
+    users_like = models.ManyToManyField(settings.AUTH_USER_MODEL,
+                                        related_name='images_liked',
+                                        blank=True)
+    users_dislike = models.ManyToManyField(settings.AUTH_USER_MODEL,
+                                           related_name='images_disliked',
+                                           blank=True)
 
     class Meta:
         verbose_name = 'Изображение'
