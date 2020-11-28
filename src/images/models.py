@@ -1,8 +1,25 @@
 from django.db import models
 from django.conf import settings
 from django.utils.text import slugify
+from django.template.defaultfilters import slugify as slugify_ru
 from django.urls import reverse
 from django.utils import timezone
+
+
+alphabet = {'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e',
+            'ё': 'yo', 'ж': 'zh', 'з': 'z', 'и': 'i', 'й': 'j', 'к': 'k',
+            'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r',
+            'с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'kh', 'ц': 'ts',
+            'ч': 'ch', 'ш': 'sh', 'щ': 'shch', 'ы': 'i', 'э': 'e', 'ю': 'yu',
+            'я': 'ya'}
+
+
+def slugify(s):
+    """
+    Overriding slugify_ru that allows to use russian words as well.
+    Переопределение slugify_ru, позволяющее также использовать русские слова.
+    """
+    return slugify_ru(''.join(alphabet.get(w, w) for w in s.lower()))
 
 
 class Image(models.Model):
@@ -15,16 +32,13 @@ class Image(models.Model):
                              on_delete=models.CASCADE)
     title = models.CharField(verbose_name='Заголовок', max_length=200)
     slug = models.SlugField(max_length=200, blank=True)
-    url = models.URLField(verbose_name='Ссылка на изображение')
-    # verbose_name='URL' verbose_name='Картинка',
-    image = models.ImageField(upload_to='image/%Y/%m/%d')
+    image = models.ImageField(verbose_name='Загрузите изображение',
+                              upload_to='image/%Y/%m/%d')
     description = models.TextField(verbose_name='Описание',
                                    max_length=450,
                                    blank=True)
-    # verbose_name='Дата и время создания',
-    created = models.DateTimeField(auto_now_add=True,
-                                   db_index=True,
-                                   default=timezone.now)
+    created = models.DateTimeField(verbose_name='Дата и время создания',
+                                   db_index=True, default=timezone.now)
     user_like = models.ManyToManyField(settings.AUTH_USER_MODEL,
                                        related_name='images_liked',
                                        blank=True)
@@ -58,7 +72,4 @@ class Image(models.Model):
         super(Image, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('images:detail', args=[self.created.year,
-                                              self.created.month,
-                                              self.created.day,
-                                              self.slug])
+        return reverse('images:detail', args=[self.id, self.slug])

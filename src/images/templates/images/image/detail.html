@@ -3,8 +3,8 @@
 {% block title %}{{ image.title }}{% endblock %}
 
 {% block content %}
-  <h1>{{ image.title }}</h1>
-  <img src="{{ image.image }}" class="image-detail">
+<h1>{{ image.title }}</h1>
+<img src="{{ image.image.url }}" class="image-detail">
 {% with total_likes=image.users_like.count %}
 <div class="image-info">
 <div>
@@ -23,5 +23,4 @@ Nobody likes this image yet.
 {% endfor %}
 </div>
 {% endwith %}
-
 {% endblock %}

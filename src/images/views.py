@@ -23,8 +23,9 @@ def image_create(request):
     сохраняется в БД. Для каждой картики формируется URL.
     """
     if request.method == 'POST':
-        image_form = ImageCreateForm(data=request.POST)
+        image_form = ImageCreateForm(request.POST, request.FILES)
         if image_form.is_valid():
+            print(image_form.errors)
             cd = image_form.cleaned_data
             new_item = image_form.save(commit=False)
             # Adding a user to the created object
@@ -32,11 +33,9 @@ def image_create(request):
             new_item.user = request.user
             new_item.save()
             messages.success(request, 'Изображение успешно добавлено')
-            # Redirect the user to the saved image page
-            # Перенаправление пользователя на страницу сохраненного изображения
             return redirect(new_item.get_absolute_url())
         else:
-            print('Ошибка, форма не валидна')
+            messages.error(request, image_form.errors)
     else:
         # Filling out a form from a GET request
         # Заполнение формы из GET-запроса
@@ -47,9 +46,7 @@ def image_create(request):
                   {'section': 'images', 'image_form': image_form})
 
 
-def image_detail(request, slug, year, month, day):
-    image = get_object_or_404(Image, slug=image, created__year=year,
-                                                 created__month=month,
-                                                 created__day=day)
+def image_detail(request, id, slug):
+    image = get_object_or_404(Image, id=id, slug=slug)
     return render(request, 'images/image/detail.html',
                            {'section': 'images', 'image': image})

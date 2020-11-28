@@ -6,18 +6,16 @@
 
     <h1>Рабочий стол</h1>
 
-    {% with total_images_created=request.user.images_created.count %}
-        <p> Добро пожаловать в рабочий стол.
-        Вы поделились {{ total_image_created }} новым изображением
-        {{ total_images_created|pluralize }}. </p>
-    {% endwith %}
-
-    <p> Загрузить изображение на сайт.</p>
-
     <p>
         Добро пожаловать в Ваш рабочий стол.
         Вы можете <a href="{% url "edit_user_profile" %}"> изменить свой профиль</a> 
         или <a href="{% url "password_change" %}">изменить свой пароль.</a>
     <p>
+
+    {% with total_images_created=request.user.images_created.count %}
+        <p> Добро пожаловать в рабочий стол.
+        Вы поделились {{ total_images_created }} новым изображением
+        {{ total_images_created|pluralize }}. </p>
+    {% endwith %}
 
 {% endblock content %}
