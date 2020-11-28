@@ -13,9 +13,7 @@
     <p>
 
     {% with total_images_created=request.user.images_created.count %}
-        <p> Добро пожаловать в рабочий стол.
-        Вы поделились {{ total_images_created }} новым изображением
-        {{ total_images_created|pluralize }}. </p>
+        <p> На данный момоент загруженных вами изображений равно {{ total_images_created }}. </p>
     {% endwith %}
 
 {% endblock content %}

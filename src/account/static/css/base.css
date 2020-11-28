@@ -206,11 +206,12 @@ ul.messages li a.close {
     overflow:auto;
 }
 .count {
-    color:#aaa;
-    border:3px solid #bbb;
+    color:rgb(2, 6, 19);
+    border:3px solid #12c064;;
     border-radius:26px;
     padding:10px 20px;
     margin:20px 10px 0;
+    font-size:14px;
 }
 a.like, a.follow { float:right; margin-top:-8px; }
 
