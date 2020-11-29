@@ -42,9 +42,7 @@ class Image(models.Model):
     users_like = models.ManyToManyField(settings.AUTH_USER_MODEL,
                                         related_name='images_liked',
                                         blank=True)
-    users_dislike = models.ManyToManyField(settings.AUTH_USER_MODEL,
-                                           related_name='images_disliked',
-                                           blank=True)
+
 
     class Meta:
         verbose_name = 'Изображение'

@@ -12,11 +12,21 @@
         </a>
     {% endthumbnail %}
 
-    {% with total_likes=image.user_like.count %}
+    {% with total_likes=image.users_like.count users_like=image.users_like.all%}
     <div class="image-info">
         <div>
-            <span class="count">{{ total_likes }} нравиться </span>
+          <span class="count">
+           <span class="total">{{ total_likes }}</span> нравиться
+          </span>
+          <a href="#" data-id="{{ image.id }}" data-action="{% if request.user in users_like %}un{% endif %}like" class="like button">
+            {% if request.user not in users_like %}
+              Нравиться
+            {% else %}
+              Не нравиться
+            {% endif %}
+          </a>
         </div>
+        {{ image.description|linebreaks }}
     </div>
     
     <div class="image-likes">
@@ -25,28 +35,43 @@
                 <img src="{{ user.profile.photo.url }}">
                 <p>{{ user.first_name }}</p>
             </div>
+        {% empty %}
+            Изображение пока никому не понравилось.
         {% endfor %}
     </div>
     {% endwith %}
+{% endblock content %}
 
-    {% with total_dislikes=image.user_dislike.count %}
-    <div class="image-info">
-        <div>
-            <span class="count">{{ total_dislikes }} не нравиться </span>
-        </div>
-    </div>
-    
-    <div class="image-likes">
-        {% for user in image.users_dislike.all %}
-            <div>
-                <img src="{{ user.profile.photo.url }}">
-                <p>{{ user.first_name }}</p>
-            </div>
-        {% endfor %}
-    </div>
-    {% endwith %}
-    
-    <div class="image-info">
-        {{ image.description|linebreaks }}
-    </div>
-{% endblock %}
+{% block domready %}
+    $('a.like').click(function(e){
+        e.preventDefault();
+        $.post('{% url "images:like" %}',
+            {
+                id: $(this).data('id'),
+                action: $(this).data('action')
+            },
+            function(data){
+                if (data['status'] == 'ok')
+                {
+                    var previous_action = $('a.like').data('action');
+                    {% comment %}
+                        Change action variable
+                        Изменяем переменную действия
+                    {% endcomment %}
+                    $('a.like').data('action', previous_action == 'like' ? 'unlike' : 'like');
+                    {% comment %}
+                        Change link text
+                        Изменяем текст
+                    {% endcomment %}
+                    $('a.like').text(previous_action == 'like' ? 'Не нравиться': 'Нравиться');
+                    {% comment %}
+                        Updating the total number of likes
+                        Обновляем общее количество лайков
+                    {% endcomment %}
+                    var previous_likes = parseInt($('span.count .total').text());
+                    $('span.count .total').text(previous_action == 'like' ? previous_likes + 1 : previous_likes - 1);
+                }
+            }
+        );
+    });
+{% endblock domready %}

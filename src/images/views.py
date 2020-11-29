@@ -48,6 +48,8 @@ def image_create(request):
 
 
 def image_detail(request, id, slug):
+    """ Handler for viewing and editing image information """
+    """ Обработчик для просмотра и редактирования сведений об изображениях"""
     image = get_object_or_404(Image, id=id, slug=slug)
     return render(request, 'images/image/detail.html',
                            {'section': 'images', 'image': image})
@@ -56,6 +58,18 @@ def image_detail(request, id, slug):
 @login_required
 @require_POST
 def image_like(request):
+    """
+    The login_required decorator prevents unauthorized users from accessing
+    this handler. The require_POST decorator returns an HttpResponseNotAllowed
+    error (response status 405) if the request was not POSTed. The handler will
+    only be executed for POST requests. A handler for liking and unmarking
+    images.
+    Декоратор login_required не даtn неавторизованным пользователям доступ к
+    этому обработчику. Декоратор require_POST возвращает ошибку
+    HttpResponseNotAllowed (статус ответа 405), если запрос отправлен
+    не методом POST. Обработчик будет выполняться только при POST-запросах.
+    Обработчик для отметки изображения как понравившиеся и снимать эту отметку.
+    """
     image_id = request.POST.get('id')
     action = request.POST.get('action')
     if image_id and action:

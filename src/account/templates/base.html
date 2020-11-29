@@ -46,12 +46,28 @@
         {% block content %}
         {% endblock content %}
     </div>
-    <script
-    src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
     <script>
-        $(document).ready(function(){
-            {% block domready %}{% endblock %}
+        var csrftoken = Cookies.get('csrftoken');
+        function csrfSafeMethod(method) {
+            {% comment %}
+                For these methods, the token will not be supplied in the header.
+                Для этих методов токен не будет подставляться в заголовок. 
+            {% endcomment %}
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings){
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
         });
-    </script
+        $(document).ready(function(){
+            {% block domready %}
+            {% endblock domready %}
+        });
+    </script>
 </body>
 </html>
