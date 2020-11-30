@@ -14,7 +14,7 @@
                     <a href="{% url "dashboard" %}">Мой рабочий стол</a>
                 </li>
                 <li {% if section == "images" %} class="selected" {% endif %}>
-                    <a href="#">Картинки</a>
+                    <a href="{% url "images:list" %}">Картинки</a>
                     {% comment %} {% images:list %} {% endcomment %}
                 </li>
                 <li {% if section == "people" %} class="selected" {% endif %}>

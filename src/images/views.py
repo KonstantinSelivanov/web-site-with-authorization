@@ -3,9 +3,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponse, JsonResponse, request
 from django.views.decorators.http import require_POST
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .forms import ImageCreateForm
 from .models import Image
+from common.decorators import ajax_required
 
 
 @login_required
@@ -55,19 +57,25 @@ def image_detail(request, id, slug):
                            {'section': 'images', 'image': image})
 
 
+@ajax_required
 @login_required
 @require_POST
 def image_like(request):
     """
+    Decorator ajax_required so the handler can only accept AJAX requests.
     The login_required decorator prevents unauthorized users from accessing
     this handler. The require_POST decorator returns an HttpResponseNotAllowed
     error (response status 405) if the request was not POSTed. The handler will
-    only be executed for POST requests. A handler for liking and unmarking
-    images.
-    Декоратор login_required не даtn неавторизованным пользователям доступ к
+    only be executed for POST requests.
+
+    A handler for liking and unmarking images.
+
+    Декоратор ajax_required чтобы обработчик мог принимать только AJAX-запросы.
+    Декоратор login_required не дает неавторизованным пользователям доступ к
     этому обработчику. Декоратор require_POST возвращает ошибку
     HttpResponseNotAllowed (статус ответа 405), если запрос отправлен
     не методом POST. Обработчик будет выполняться только при POST-запросах.
+
     Обработчик для отметки изображения как понравившиеся и снимать эту отметку.
     """
     image_id = request.POST.get('id')
@@ -83,3 +91,38 @@ def image_like(request):
         except Image.DoesNotExist:
             pass
     return JsonResponse({'status': 'ok'})
+
+
+@login_required
+def image_list(request):
+    """
+    Handler for displaying a list of images. The handler will handle
+    the standard page load and AJAX request to get the next 8 images.
+    Обработчик для отображения списка изображений.
+    Обработчик будет обрабатывать стандартную загрузку страницы и AJAX-запрос
+    для получения следующих 8 изображений.
+    """
+    images = Image.objects.all()
+    paginator = Paginator(images, 8)
+    page = request.GET.get('page')
+    try:
+        images = paginator.page(page)
+    except PageNotAnInteger:
+        # If the front page is not a number, return the first.
+        # Если передняя страница не является числом, возвращаем первую.
+        images = paginator.page(1)
+    except EmptyPage:
+        if request.is_ajax():
+            # If we receive an AJAX request with a page number greater
+            # than their number, we return an empty page.
+            # Если получили AJAX-запрос с номером страницы, большим,
+            # чем их количество, возвращаем пустую страницу.
+            return HttpResponse('')
+        # If the page number is greater than their number, return the last one.
+        # Если номер страницы больше, чем их количество, возвращаем последнюю.
+        images = paginator.page(paginator.num_pages)
+    if request.is_ajax():
+        return render(request, 'images/image/list_ajax.html',
+                               {'section': 'images', 'images': images})
+    return render(request, 'images/image/list.html',
+                           {'section': 'images', 'images': images})
